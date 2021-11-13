@@ -2,7 +2,7 @@
 2. функционал который будет определять разницу между временем пользователь и датой окончания таймера
 3. функция которая будет заниматся обномвлением таймера
 **/
-const stock = '2021-10-30';
+const stock = '2022-01-01';
 
 function getTimeDifference(endtime) {
 	const t = Date.parse(endtime) - Date.parse(new Date());
