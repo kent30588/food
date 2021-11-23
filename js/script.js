@@ -73,7 +73,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 
-	//const modalTimerId = setTimeout(openModal, 5000);
+	const modalTimerId = setTimeout(openModal, 5000);
 	function showModalByScroll() {
 				if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
 					openModal();
@@ -81,14 +81,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 	window.addEventListener('scroll', showModalByScroll);
-	function isPangram(string) {
-		const COUN_LETTER_IN_LANGUAGE = 26;
-		const ALPHABET = /[a-z]/g;
-
-		return (
-			new Set(string.toLowerCase().match(ALPHABET)).size === COUN_LETTER_IN_LANGUAGE);
-	}
-	console.log(isPangram('The quick brown fox jumps over the lazy dog'));
 
 //Используем классы для карточек
 
