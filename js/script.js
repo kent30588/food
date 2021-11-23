@@ -150,4 +150,68 @@ window.addEventListener('DOMContentLoaded', () => {
 		'menu__item'
 	).render();
 
+	//Forms
+	//получим все формы на странице
+	const forms = document.querySelectorAll('form');
+	const message = {
+		loading: 'Загрузка',
+		success: 'Спасибо! Скоро мы с вами свяжемся',
+		failure: 'Что-то пошло не так'
+	};
+
+	forms.forEach(item => {
+		postData(item);
+	});
+	//Пишем функцию которая будет отвечать за постинг данных
+	//Эта функция должна принимать какойто аргумент(форму)
+	function postData(form) {
+		//событие submit - оно срабатывает каждый раз когда мы пытаемся отправить какую-то форму
+		form.addEventListener('submit', (e) => {
+			//отменяем стандартное поведение браузера (обновление страницы после отправки формы)
+			e.preventDefault();
+			//Создаем новый блок для вывода сообщений
+			const statusMessage = document.createElement('div');
+			statusMessage.classList.add('status');
+			statusMessage.textContent = message.loading;
+			form.append(statusMessage);
+			//создаем объект 
+			const request = new XMLHttpRequest();
+			//вызываем метод open что бы настроить запрос
+			request.open('POST', 'server.php');
+			//Заголовки которые говорят серверу что именно приходит ВАЖНО. Если используем связку new XMLHttpRequest() + new FormData(form); заголовки не нужны! Будет ОШИБКА!
+			//request.setRequestHeader('Content-type', 'multipart/form-data');
+
+			// Для отправки JSON
+			request.setRequestHeader('Content-type', 'application/json');
+			//создаем объект который позволяет нам с определенной формы быстро сформировать  данные которые заполнил пользователь формат (ключ - значение)
+			const formData = new FormData(form);
+			//код для JSON формата
+			const object = {};
+			formData.forEach(function (value, key) {
+				object[key] = value;
+			});
+			//метод превращает обычный объект в JSOn
+			const json = JSON.stringify(object);
+			//Вызываем метод send для отправки - formData
+			//request.send(formData);
+			//для JSON
+			request.send(json);
+			//Создаю обработчик для отслеживания нашей конечной загрузки
+			request.addEventListener('load', () => {
+				if (request.status === 200) {
+					console.log(request.response);
+					statusMessage.textContent = message.success;
+					//После успешной отправки, очищаем форму
+					form.reset();
+					//удаляем блок с сообщениеми
+					setTimeout(() => {
+						statusMessage.remove();
+					}, 2000);
+				} else {
+					statusMessage.textContent = message.failure;
+				}
+			});
+		});
+	}
+
 });
