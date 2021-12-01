@@ -174,40 +174,28 @@ window.addEventListener('DOMContentLoaded', () => {
 				margin: 0 auto;
 			`;
 			form.insertAdjacentElement('afterend', statusMessage);
-			//создаем объект 
-			const request = new XMLHttpRequest();
-			//вызываем метод open что бы настроить запрос
-			request.open('POST', 'server.php');
-			//Заголовки которые говорят серверу что именно приходит ВАЖНО. Если используем связку new XMLHttpRequest() + new FormData(form); заголовки не нужны! Будет ОШИБКА!
-			//request.setRequestHeader('Content-type', 'multipart/form-data');
-
-			// Для отправки JSON
-			request.setRequestHeader('Content-type', 'application/json');
-			//создаем объект который позволяет нам с определенной формы быстро сформировать  данные которые заполнил пользователь формат (ключ - значение)
 			const formData = new FormData(form);
-			//код для JSON формата
 			const object = {};
 			formData.forEach(function (value, key) {
 				object[key] = value;
 			});
-			//метод превращает обычный объект в JSOn
-			const json = JSON.stringify(object);
-			//Вызываем метод send для отправки - formData
-			//request.send(formData);
-			//для JSON
-			request.send(json);
-			//Создаю обработчик для отслеживания нашей конечной загрузки
-			request.addEventListener('load', () => {
-				if (request.status === 200) {
-					console.log(request.response);
-					showThanksModal(message.success);
-					//После успешной отправки, очищаем форму
-					form.reset();
-					//удаляем блок с сообщениеми
-						statusMessage.remove();
-				} else {
-					showThanksModal(message.failure);
-				}
+			fetch('server.php', {
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(object)
+			}).then(data => data.text())
+				.then(data => {
+				console.log(data);
+				showThanksModal(message.success);
+				//удаляем блок с сообщениеми
+				statusMessage.remove();
+			}).catch(() => {
+				showThanksModal(message.failure);
+			}).finally(() => {
+				//очищаем форму
+				form.reset();
 			});
 		});
 	}
