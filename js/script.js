@@ -1,40 +1,40 @@
 window.addEventListener('DOMContentLoaded', () => {
-//Табы
-    const tabs = document.querySelectorAll('.tabheader__item');
-    const tabsContent = document.querySelectorAll('.tabcontent');
-    const tabsParent = document.querySelector('.tabheader__items');
+	//Табы
+	const tabs = document.querySelectorAll('.tabheader__item');
+	const tabsContent = document.querySelectorAll('.tabcontent');
+	const tabsParent = document.querySelector('.tabheader__items');
 
-    function hideRabContent() {
-        tabsContent.forEach(item => {
-            item.classList.add('hide');
-            item.classList.remove('show', 'fade');
-        });
-        tabs.forEach(item => {
-            item.classList.remove('tabheader__item_active');
-        });
-    }
+	function hideRabContent() {
+		tabsContent.forEach(item => {
+			item.classList.add('hide');
+			item.classList.remove('show', 'fade');
+		});
+		tabs.forEach(item => {
+			item.classList.remove('tabheader__item_active');
+		});
+	}
 
-    function showTabContent(i = 0) {
-        tabsContent[i].classList.add('show', 'fade');
-        tabsContent[i].classList.remove('hide');
-        tabs[i].classList.add('tabheader__item_active');
-    }
+	function showTabContent(i = 0) {
+		tabsContent[i].classList.add('show', 'fade');
+		tabsContent[i].classList.remove('hide');
+		tabs[i].classList.add('tabheader__item_active');
+	}
 
-    hideRabContent();
-    showTabContent();
+	hideRabContent();
+	showTabContent();
 
-    tabsParent.addEventListener('click', (event) => {
-        const target = event.target;
+	tabsParent.addEventListener('click', (event) => {
+		const target = event.target;
 
-        if (target && target.classList.contains('tabheader__item')) {
-            tabs.forEach((item, i) => {
-                if (target == item) {
-                    hideRabContent();
-                    showTabContent(i);
-                }
-            });
-        }
-	 });
+		if (target && target.classList.contains('tabheader__item')) {
+			tabs.forEach((item, i) => {
+				if (target == item) {
+					hideRabContent();
+					showTabContent(i);
+				}
+			});
+		}
+	});
 
 	//Модальное окно
 
@@ -60,7 +60,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	modal.addEventListener('click', (e) => {
 		if (e.target === modal || e.target.getAttribute('data-close') === '') {
-				closeModal();
+			closeModal();
 		}
 	});
 
@@ -72,17 +72,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	const modalTimerId = setTimeout(openModal, 50000);
 	function showModalByScroll() {
-				if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-					openModal();
-					window.removeEventListener('scroll', showModalByScroll);
+		if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+			openModal();
+			window.removeEventListener('scroll', showModalByScroll);
 		}
 	}
 	window.addEventListener('scroll', showModalByScroll);
 
-//Используем классы для карточек
+	//Используем классы для карточек
 
-	class MenuCard{
-		constructor(src,alt,title,descr,price, parentSelector, ...classes) {
+	class MenuCard {
+		constructor(src, alt, title, descr, price, parentSelector, ...classes) {
 			this.src = src;
 			this.alt = alt;
 			this.title = title;
@@ -117,36 +117,44 @@ window.addEventListener('DOMContentLoaded', () => {
 			this.parent.append(element);
 		}
 	}
-	//Создаем новый объект и вызываем render()
-	new MenuCard(
-		"img/tabs/vegy.jpg",
-		"vegy" ,
-		'Меню "Фитнес"',
-		'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-		9,
-		'.menu .container',
-	).render();
 
-	new MenuCard(
-		"img/tabs/elite.jpg",
-		"elite"  ,
-		'Меню “Премиум”',
-		'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-		21,
-		'.menu .container',
-		'menu__item'
-	).render();
+	const getResource = async (url) => {
+		const res = await fetch(url);
+		if (!res.ok) {
+			throw new Error(`Coult not fetch ${url}, status: ${res.status}`);
+		}
+		return await res.json();
+	};
 
-	new MenuCard(
-		"img/tabs/post.jpg" ,
-		"post" ,
-		'Меню "Постное"',
-		'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-		15,
-		'.menu .container',
-		'menu__item'
-	).render();
+	getResource('http://localhost:3000/menu')
+		.then(data => {
+			data.forEach(({img, altimg, title, descr, price}) => {
+				new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+			});
+		});
+	
 
+	//getResource('http://localhost:3000/menu')
+	//	.then(data => createCard(data));
+	
+	//function createCard(data) {
+	//	data.forEach(({ img, altimg, title, descr, price }) => {
+	//		const element = document.createElement('div');
+	//		element.classList.add('menu__item');
+	//		element.innerHTML = `
+	//			<img src=${img} alt=${altimg} >
+	//			<h3 class="menu__item-subtitle">${title}</h3>
+	//			<div class="menu__item-descr">${descr}</div>
+	//			<div class="menu__item-divider"></div>
+	//			<div class="menu__item-price">
+	//			<div class="menu__item-cost">Цена:</div>
+	//			<div class="menu__item-total"><span>${price}</span> грн/день</div>
+	//			</div>
+	//		`;
+	//		document.querySelector('.menu .container').append(element);
+	//});
+	//}
+	
 	//Forms
 	//получим все формы на странице
 	const forms = document.querySelectorAll('form');
@@ -157,11 +165,23 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 
 	forms.forEach(item => {
-		postData(item);
+		bindPostData(item);
 	});
+
+	const postData = async (url, data) => {
+		const res = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: data
+		});
+
+		return await res.json();
+	};
 	//Пишем функцию которая будет отвечать за постинг данных
 	//Эта функция должна принимать какойто аргумент(форму)
-	function postData(form) {
+	function bindPostData(form) {
 		//событие submit - оно срабатывает каждый раз когда мы пытаемся отправить какую-то форму
 		form.addEventListener('submit', (e) => {
 			//отменяем стандартное поведение браузера (обновление страницы после отправки формы)
@@ -174,18 +194,12 @@ window.addEventListener('DOMContentLoaded', () => {
 				margin: 0 auto;
 			`;
 			form.insertAdjacentElement('afterend', statusMessage);
+
 			const formData = new FormData(form);
-			const object = {};
-			formData.forEach(function (value, key) {
-				object[key] = value;
-			});
-			fetch('server.php', {
-				method: 'POST',
-				headers: {
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(object)
-			}).then(data => data.text())
+
+			const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+				postData('http://localhost:3000/requests', json)
 				.then(data => {
 				console.log(data);
 				showThanksModal(message.success);
@@ -223,5 +237,4 @@ window.addEventListener('DOMContentLoaded', () => {
 		}, 4000);
 		document.querySelector('.modal').append(thanksModal);
 	}
-
 });
