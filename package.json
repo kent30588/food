@@ -18,5 +18,8 @@
   "homepage": "https://github.com/kent30588/food#readme",
   "devDependencies": {
     "json-server": "^0.17.0"
+  },
+  "dependencies": {
+    "jshint": "^2.13.1"
   }
 }
