@@ -1,18 +1,17 @@
 window.addEventListener('DOMContentLoaded', () => {
 
 	const slides = document.querySelectorAll('.offer__slide');
-	//const slider = document.querySelector('.offer__slider');
+	const slider = document.querySelector('.offer__slider');
 	const prev = document.querySelector('.offer__slider-prev');
 	const next = document.querySelector('.offer__slider-next');
 	const total = document.querySelector('#total');
 	const current = document.querySelector('#current');
-	//const slidesWrapper = document.querySelector('.offer__slider-wrapper');
-	//const slidesField = document.querySelector('.offer__slider-inner');
-	//const width = window.getComputedStyle(slidesWrapper).width;
+	const slidesWrapper = document.querySelector('.offer__slider-wrapper');
+	const slidesField = document.querySelector('.offer__slider-inner');
+	const width = window.getComputedStyle(slidesWrapper).width;
 
 	let slideIndex = 1;
-	//let offset = 0;
-	/*
+	let offset = 0;
 	if (slides.length < 10) {
 		total.textContent = `0${slides.length}`;
 		current.textContent = `0${slideIndex}`;
@@ -75,11 +74,15 @@ window.addEventListener('DOMContentLoaded', () => {
 		dots.push(dot);
 	}
 
+	function deleteNotDigits(str) {
+		return +str.replace(/\D/g, '');
+	}
+
 	next.addEventListener('click', () => {
-		if (offset === +width.slice(0, width.length - 2) * (slides.length - 1)) {
+		if (offset === deleteNotDigits(width) * (slides.length - 1)) {
 			offset = 0;
 		} else {
-			offset += +width.slice(0, width.length - 2);
+			offset += deleteNotDigits(width);
 		}
 		slidesField.style.transform = `translateX(-${offset}px)`;
 
@@ -101,9 +104,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	prev.addEventListener('click', () => {
 		if (offset === 0) {
-			offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+			offset = deleteNotDigits(width) * (slides.length - 1);
 		} else {
-			offset -= +width.slice(0, width.length - 2);
+			offset -= deleteNotDigits(width);
 		}
 		slidesField.style.transform = `translateX(-${offset}px)`;
 
@@ -127,7 +130,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				const slideTo = e.target.getAttribute('data-slide-to');
 
 				slideIndex = slideTo;
-				offset = offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+				offset = offset = deleteNotDigits(width) * (slideTo - 1);
 
 				slidesField.style.transform = `translateX(-${offset}px)`;
 
@@ -143,8 +146,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			});
 		});
 	});
-	*/
-
+/*
 	showSlides(slideIndex);
 	if (slides.length < 10) {
 		total.textContent = `0${slides.length}`;
@@ -175,5 +177,5 @@ window.addEventListener('DOMContentLoaded', () => {
 	next.addEventListener('click', () => {
 		plusSlides(1);
 	});
-
+*/
 });
