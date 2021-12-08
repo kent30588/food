@@ -1,70 +1,51 @@
-function modal() {
-	//Модальное окно
+function closeModal(modalSelector) {
+	const modal = document.querySelector(modalSelector);
+	modal.classList.add('hide');
+	modal.classList.remove('show');
+	document.body.style.overflow = '';
+}
 
-	const modalTrigger = document.querySelectorAll('[data-modal]');
-	const modal = document.querySelector('.modal');
-
-	function openModal() {
-		modal.classList.add('show');
-		modal.classList.remove('hide');
-		document.body.style.overflow = 'hidden';
+function openModal(modalSelector, modalTimerId) {
+	const modal = document.querySelector(modalSelector);
+	modal.classList.add('show');
+	modal.classList.remove('hide');
+	document.body.style.overflow = 'hidden';
+	if (modalTimerId) {
 		clearInterval(modalTimerId);
 	}
+}
+
+function modal(triggerSelector, modalSelector, modalTimerId) {
+	//Модальное окно
+	const modalTrigger = document.querySelectorAll(triggerSelector);
+	const modal = document.querySelector(modalSelector);
 
 	modalTrigger.forEach(btn => {
-		btn.addEventListener('click', openModal);
+		btn.addEventListener('click', () => openModal(modalSelector, modalTimerId));
 	});
-
-	function closeModal() {
-		modal.classList.add('hide');
-		modal.classList.remove('show');
-		document.body.style.overflow = '';
-	}
 
 	modal.addEventListener('click', (e) => {
 		if (e.target === modal || e.target.getAttribute('data-close') === '') {
-			closeModal();
+			closeModal(modalSelector);
 		}
 	});
 
 	document.addEventListener('keydown', (e) => {
 		if (e.code === 'Escape' && modal.classList.contains('show')) {
-			closeModal();
+			closeModal(modalSelector);
 		}
 	});
 
-	const modalTimerId = setTimeout(openModal, 50000);
 	function showModalByScroll() {
 		if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-			openModal();
+			openModal(modalSelector, modalTimerId);
 			window.removeEventListener('scroll', showModalByScroll);
 		}
 	}
 	window.addEventListener('scroll', showModalByScroll);
 	
-	//оповещение пользователя
-	function showThanksModal(message) {
-		const prevModalDialog = document.querySelector('.modal__dialog');
-
-		prevModalDialog.classList.add('hide');
-		openModal();
-
-		const thanksModal = document.createElement('div');
-		thanksModal.classList.add('modal__dialog');
-		thanksModal.innerHTML = `
-		<div class="modal__content">
-			<div class="modal__close" data-close>x</div>
-			<div class="modal__title">${message}</div>
-		</div>
-		`;
-		setTimeout(() => {
-			thanksModal.remove();
-			prevModalDialog.classList.add('show');
-			prevModalDialog.classList.remove('hide');
-			closeModal();
-		}, 4000);
-		document.querySelector('.modal').append(thanksModal);
-	}
 }
 
-module.exports = modal;
+export default modal;
+export { closeModal };
+export { openModal };
