@@ -1,5 +1,5 @@
-window.addEventListener('DOMContentLoaded', () => {
-
+function slider() {
+	//Слайдер
 	const slides = document.querySelectorAll('.offer__slide');
 	const slider = document.querySelector('.offer__slider');
 	const prev = document.querySelector('.offer__slider-prev');
@@ -178,4 +178,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		plusSlides(1);
 	});
 */
-});
+}
+
+module.exports = slider;
